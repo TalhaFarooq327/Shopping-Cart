@@ -1,9 +1,11 @@
 import "./App.css";
-import { useState } from "react";
+import { useReducer } from "react";
 import ProductList from "./components/ProductList";
+import cartReducer from "./store/cartReducer";
+import CartUi from "./components/cartUi";
 
 function App() {
-  const [cart, setCart] = useState([]);
+  const [cart, dispatch] = useReducer(cartReducer, []);
 
   const products = [
     {
@@ -24,23 +26,14 @@ function App() {
   ];
 
   const addToCart = (product) => {
-    setCart([...cart, product]);
+    dispatch({ type: "ADD_TO_CART", payload: product });
   };
 
   return (
     <div className="app">
       <ProductList products={products} addToCart={addToCart} />
 
-      <div className="cart">
-        <h2>Cart</h2>
-
-        {cart.map((item, index) => (
-          <div key={index} className="cart-item">
-            <p>{item.name}</p>
-            <p>${item.price}</p>
-          </div>
-        ))}
-      </div>
+      <CartUi cart={cart} dispatch={dispatch} />
     </div>
   );
 }
